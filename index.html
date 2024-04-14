@@ -10,6 +10,7 @@
     <script>
       class CanvasImageEditor {
         ctx;
+        lastFrameTime = 0; // 마지막 프레임 시간 초기화
 
         constructor(canvasId, imagePath) {
           this.setupCanvas(canvasId);
@@ -41,14 +42,23 @@
         }
 
         updateCanvasColors() {
-          const imageData = this.ctx.getImageData(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-          );
-          let data = imageData.data;
-          this.applyImageDataUpdates(data, imageData);
+          const now = Date.now();
+          const delta = now - this.lastFrameTime;
+
+          if (delta > 300) {
+            // 1초가 지난 경우에만 업데이트
+            const imageData = this.ctx.getImageData(
+              0,
+              0,
+              this.canvas.width,
+              this.canvas.height
+            );
+            let data = imageData.data;
+            this.applyImageDataUpdates(data, imageData);
+            this.lastFrameTime = now; // 마지막 프레임 시간 갱신
+          } else {
+            requestAnimationFrame(this.updateCanvasColors.bind(this));
+          }
         }
 
         applyImageDataUpdates(data, imageData) {
