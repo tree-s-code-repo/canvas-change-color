@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body onload="draw();">
+    <canvas id="myCanvas" width="150px" height="150px">Canvas!</canvas>
+  </body>
+</html>
+
+<script>
+  function draw() {
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // 이미지 객체를 생성합니다.
+    const img = new Image();
+
+    console.log(img);
+    // 이미지가 로드되면 캔버스에 그립니다.
+    img.onload = function () {
+      // 캔버스에 이미지를 그립니다.
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    // // 이미지 소스를 설정합니다. (로컬 파일 혹은 URL)
+    img.src = "./Logo_B.png";
+
+    setInterval(() => {
+      changeColor();
+    }, 1000); // 3000 밀리초 후 실행
+
+    function changeColor() {
+      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      console.log(imageData);
+      let data = imageData.data;
+
+      // 이미지 데이터를 반복하여 검은색 선을 찾고 빨간색으로 변경합니다.
+      const reverseColor = (data, i) => {
+        if (data[i] < 50 && data[i + 1] < 50 && data[i + 2] < 50) {
+          // 해당 픽셀을 빨간색으로 변경
+          data[i] = 255; // R
+          data[i + 1] = 0; // G
+          data[i + 2] = 0; // B
+
+          return;
+        }
+
+        if (data[i] == 255 && data[i + 1] == 0 && data[i + 2] == 0) {
+          data[i] = 0; // R
+          data[i + 1] = 0; // G
+          data[i + 2] = 0; // B
+        }
+      };
+
+      for (let i = 0; i < data.length; i += 4) {
+        // 검은색 픽셀 찾기 (거의 검은색 포함)
+
+        reverseColor(data, i);
+        ctx.putImageData(data, 0, 0);
+      }
+    }
+  }
+</script>
