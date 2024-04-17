@@ -51,9 +51,10 @@
         startTimeCheck(delta, now) {
           if (delta > 300) {
             this.getImageDatas(now);
-          } else {
-            requestAnimationFrame(this.updateCanvasColors.bind(this));
+            return;
           }
+
+          requestAnimationFrame(this.updateCanvasColors.bind(this));
         }
 
         applyImageDataUpdates(data, imageData) {
