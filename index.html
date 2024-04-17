@@ -41,13 +41,6 @@
           );
         }
 
-        updateCanvasColors() {
-          const now = Date.now();
-          const delta = now - this.lastFrameTime;
-
-          this.startTimeCheck(delta, now);
-        }
-
         startTimeCheck(delta, now) {
           if (delta > 300) {
             this.getImageDatas(now);
@@ -57,16 +50,16 @@
           requestAnimationFrame(this.updateCanvasColors.bind(this));
         }
 
+        updateCanvasColors() {
+          const now = Date.now();
+          const delta = now - this.lastFrameTime;
+          this.startTimeCheck(delta, now);
+        }
+
         applyImageDataUpdates(data, imageData) {
           this.updateAllPixelColors(data);
           this.ctx.putImageData(imageData, 0, 0);
           requestAnimationFrame(this.updateCanvasColors.bind(this));
-        }
-
-        updateAllPixelColors(data) {
-          for (let i = 0; i < data.length; i += 4) {
-            this.togglePixelColor(data, i);
-          }
         }
 
         getImageDatas(now) {
@@ -78,7 +71,14 @@
           );
           let data = imageData.data;
           this.applyImageDataUpdates(data, imageData);
+
           this.lastFrameTime = now; // 마지막 프레임 시간 갱신
+        }
+
+        updateAllPixelColors(data) {
+          for (let i = 0; i < data.length; i += 4) {
+            this.togglePixelColor(data, i);
+          }
         }
 
         togglePixelColor(data, i) {
