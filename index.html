@@ -45,6 +45,10 @@
           const now = Date.now();
           const delta = now - this.lastFrameTime;
 
+          this.startTimeCheck(delta, now);
+        }
+
+        startTimeCheck(delta, now) {
           if (delta > 300) {
             this.getImageDatas(now);
           } else {
