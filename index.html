@@ -43,7 +43,8 @@
 
         startTimeCheck(delta, now) {
           if (delta > 300) {
-            this.getImageDatas(now);
+            this.startGetImageDatas(now);
+            requestAnimationFrame(this.updateCanvasColors.bind(this));
             return;
           }
 
@@ -59,10 +60,9 @@
         applyImageDataUpdates(data, imageData) {
           this.updateAllPixelColors(data);
           this.ctx.putImageData(imageData, 0, 0);
-          requestAnimationFrame(this.updateCanvasColors.bind(this));
         }
 
-        getImageDatas(now) {
+        startGetImageDatas(now) {
           const imageData = this.ctx.getImageData(
             0,
             0,
@@ -71,7 +71,6 @@
           );
           let data = imageData.data;
           this.applyImageDataUpdates(data, imageData);
-
           this.lastFrameTime = now; // 마지막 프레임 시간 갱신
         }
 
